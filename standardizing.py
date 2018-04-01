@@ -11,16 +11,17 @@ import pickle
 import os
 import statsmodels.api as sm
 
-#os.chdir(r'E:\alpha_min')
-
 #start=time.clock()
 def standard_progress():
-    filenameList = os.listdir(r'E:\alpha_min')
+#    filenameList = os.listdir(r'G:\short_period_mf\alpha_min')
+    filenameList = os.listdir(r'G:\short_period_mf\alpha_day')
 #    filenameList = ['alpha_001.csv']
+#    filenameList = filenameList[149:]  #alpha_149的代码名称为code
     for filename in filenameList:
         #首先对因子值进行空值删除和标准化处理
 #        start=time.clock()
-        data = pd.read_csv(filename)
+#        data = pd.read_csv(filename)
+        data = pd.read_csv('G:/short_period_mf/alpha_day/'+filename)
         data = pd.concat([data.iloc[:,0],data.iloc[:,7:]],axis=1)
         data_c = data.fillna(0)
         data_b = data_c.iloc[:,1:]
@@ -33,16 +34,24 @@ def standard_progress():
                     data_d[j][i] = (x_mean[i]+1.65*x_std[i])
                 elif data_d[j][i] < (x_mean[i]+1.65*x_std[i]):
                     data_d[j][i] = (x_mean[i]-1.65*x_std[i])
-        data_d=pd.DataFrame(data_d,index=list(data_c['code']),columns=list(data_c.columns)[1:])
+#        data_d=pd.DataFrame(data_d,index=list(data_c['code']),columns=list(data_c.columns)[1:])
+        data_d=pd.DataFrame(data_d,index=list(data_c['symbol']),columns=list(data_c.columns)[1:])
         data_d.reset_index(inplace=True)
         data_d = data_d.rename(columns={'index':'code'})
         # 存到移动硬盘里
-        output = open(r'G:\short_period_mf\alpha_min_stand\standard_%s.pickle'%filename[:9],'wb')
+        output = open(r'G:\short_period_mf\alpha_day_stand\standard_%s.pickle'%filename[:9],'wb')
         pickle.dump(data_d,output)
         output.close()
 #        end = time.clock()
     return None
 
+
+#test2 = pd.read_pickle(r'G:\short_period_mf\alpha_min_stand\standard_alpha_001.pickle')
+#test3 = pd.read_csv(r'G:\short_period_mf\alpha_min\alpha_001.csv')
+#stockList
+#sl = test3.iloc[:,0]
+    
+#
 #def Netual_process(alpha_data,industry,saf):
 #    new_data = pd.merge(alpha_data,industry,on = ['code'])
 #    new_data2 = pd.DataFrame(new_data.code)
@@ -68,27 +77,27 @@ def standard_progress():
 #    output.close()    
 #    return None
 
-industry2=pd.read_pickle(r'C:\Users\wuwangchuxin\Desktop\yinhua_min\data\industry.pkl')
-industry3 = industry2.drop_duplicates()
-standard_alpha = os.listdir(r'G:\short_period_mf\alpha_min_stand')
-for saf in standard_alpha:
-    path = r'G:\short_period_mf\alpha_min_stand\%s'%saf
-    IC_computing(path,industry)
-
-
-for saf in standard_alpha:
-    alpha_d = pd.read_pickle(r'G:\short_period_mf\alpha_min_stand\%s'%saf)
-    Netual_process(alpha_d,industry3,saf)
+#industry2=pd.read_pickle(r'C:\Users\wuwangchuxin\Desktop\yinhua_min\data\industry.pkl')
+#industry3 = industry2.drop_duplicates()
+#standard_alpha = os.listdir(r'G:\short_period_mf\alpha_min_stand')
+#for saf in standard_alpha:
+#    path = r'G:\short_period_mf\alpha_min_stand\%s'%saf
+#    IC_computing(path,industry)
 #
+#
+#for saf in standard_alpha:
+#    alpha_d = pd.read_pickle(r'G:\short_period_mf\alpha_min_stand\%s'%saf)
+#    Netual_process(alpha_d,industry3,saf)
+##
 #paths = os.listdir(r'G:\short_period_mf\netual_process')
 #for pat in paths:
 #    IC_computing(pat,industry)
 
 
-industry3.to_csv(r'C:\Users\wuwangchuxin\Desktop\industry3.csv')
-
-alpha_d2.to_csv(r'C:\Users\wuwangchuxin\Desktop\netual_alpha001_part.csv')
-alpha_d2 = alpha_d[:2]
+#industry3.to_csv(r'C:\Users\wuwangchuxin\Desktop\industry3.csv')
+#
+#alpha_d2.to_csv(r'C:\Users\wuwangchuxin\Desktop\netual_alpha001_part.csv')
+#alpha_d2 = alpha_d[:2]
 
 
 
